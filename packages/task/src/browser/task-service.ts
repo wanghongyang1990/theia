@@ -981,12 +981,14 @@ export class TaskService implements TaskConfigurationClient {
     }
 
     async attach(terminalId: number, taskId: number): Promise<void> {
+        console.log('************************** TASK service *** ATTACH ', terminalId, ' /// ', taskId);
         // Get the list of all available running tasks.
         const runningTasks: TaskInfo[] = await this.getRunningTasks();
         // Get the corresponding task information based on task id if available.
         const taskInfo: TaskInfo | undefined = runningTasks.find((t: TaskInfo) => t.taskId === taskId);
         let widgetOpenMode: WidgetOpenMode = 'open';
         if (taskInfo) {
+            console.log('*** TASK service *** ATTACH *** task info found', taskInfo);
             const terminalWidget = this.terminalService.getByTerminalId(terminalId);
             if (terminalWidget) {
                 this.messageService.error('Task is already running in terminal');
@@ -999,6 +1001,8 @@ export class TaskService implements TaskConfigurationClient {
                     widgetOpenMode = 'reveal';
                 }
             }
+        } else {
+            console.log('*** TASK service *** ATTACH *** task info NOT found');
         }
 
         // Create / find a terminal widget to display an execution output of a task that was launched as a command inside a shell.
